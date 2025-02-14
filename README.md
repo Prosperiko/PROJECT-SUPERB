@@ -1,2 +1,2 @@
 # PROJECT-SUPERB
-A project worked on by my team and I
+A project that my team and I worked on
