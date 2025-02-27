@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace Z - Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+ 
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header>
+        <h1>Marketplace Z</h1>
+    </header>
+
+    <!-- Color Switcher -->
+    <div class="color-switcher">
+        <button class="red" onclick="changeColor('#ff4c4c')"></button>
+        <button class="blue" onclick="changeColor('#4c9aff')"></button>
+        <button class="green" onclick="changeColor('#4caf50')"></button>
+        <button class="yellow" onclick="changeColor('#ffcc00')"></button>
+        <button class="purple" onclick="changeColor('#800080')"></button>
+        <button class="pink" onclick="changeColor('#ff69b4')"></button>
+        <button class="gray" onclick="changeColor('#808080')"></button>
+        <button class="teal" onclick="changeColor('#008080')"></button>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="signup-container">
+        <h2>Create an Account</h2>
+        <form action="signup.php" method="POST" onsubmit="return validatePasswords()">
+            <div class="input-box">
+                <input type="text" name="fullname" placeholder="Full Name" required>
+            </div>
+            <div class="input-box">
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+            <div class="input-box">
+                <select name="nationality" required>
+                    <option value="" disabled selected>Select Nationality</option>
+                    <option value="USA">United States</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="CAN">Canada</option>
+                    <option value="NIG">Nigeria</option>
+                    <option value="IND">India</option>
+                    <option value="OTHERS">Others</option>
+                </select>
+            </div>
+            <div class="input-box password-container">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+            </div>
+            <div class="input-box password-container">
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+                <span class="toggle-password" onclick="togglePassword('confirm_password')">👁️</span>
+            </div>
+            <p class="error-message" id="error-message">Passwords do not match!</p>
+            <button type="submit" class="signup-btn">Sign Up</button>
+        </form>
+        <p class="login-link">Already have an account? <a href="login.html">Log in</a></p>
+    </div>
+    
+
+    
+    <!-- Inventors Section -->
+    <div class="profile-container">
+        <h3>Meet Our Inventors</h3>
+        <p class="inventors-story">
+            Our inventors are visionaries dedicated to revolutionizing the marketplace. 
+            With expertise in technology and innovation, they create seamless and efficient 
+            solutions for buyers and sellers worldwide.
+        </p>
+        <div class="profile-grid">
+            <div class="profile-image" style="background-image: url('C:/Users/USER 24/Desktop/game/WIN_20250225_08_32_57_Pro.jpg');"></div>
+            <div class="profile-image" style="background-image: url('C:/Users/USER 24/Desktop/game/WhatsApp Image 2025-02-25 at 09.40.59_126a3712.jpg');"></div>
+            <div class="profile-image" style="background-image: url('C:/Users/USER 24/Desktop/game/WhatsApp Image 2025-02-25 at 09.47.23_6f339929.jpg');"></div>
+            <div class="profile-image" style="background-image: url('https://via.placeholder.com/120');"></div>
+            <div class="profile-image" style="background-image: url('https://via.placeholder.com/120');"></div>
+            <div class="profile-image" style="background-image: url('https://via.placeholder.com/120');"></div>
+        </div>
+    </div>
+
+    <script>
+        function changeColor(color) {
+            document.body.style.backgroundColor = color;
+            document.querySelector('.signup-container').style.backgroundColor = color;
+            document.querySelector('.profile-container').style.backgroundColor = color;
+        }
+
+        
+            function togglePassword(id) {
+                let input = document.getElementById(id);
+                input.type = input.type === "password" ? "text" : "password";
+            }
+        
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fincom</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: white;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Container */
+        .container {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+
+        /* Navbar */
+        header {
+            background-color: #222;
+            padding: 20px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: #f4b400;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #f4b400;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0;
+            background: linear-gradient(to right, #222, #333);
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #f4b400;
+            color: #222;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #ffcc00;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 60px 0;
+            background-color: #181818;
+        }
+
+        .features h2 {
+            margin-bottom: 30px;
+        }
+
+        .feature-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            width: 300px;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 10px;
+        }
+
+        /* Call-to-Action */
+        .cta {
+            padding: 80px 0;
+            background: linear-gradient(to right, #333, #444);
+        }
+
+        .cta h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #111;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        /* Color Switcher */
+        .color-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+
+        .color-switcher button {
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+        }
+
+        .red { background-color: #ff4c4c; }
+        .blue { background-color: #4c9aff; }
+        .green { background-color: #4caf50; }
+        .yellow { background-color: #ffcc00; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header>
+        <div class="container">
+            <h1>Fincom</h1>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Color Switcher -->
+    <div class="color-switcher">
+        <button class="red" onclick="changeColor('#ff4c4c')"></button>
+        <button class="blue" onclick="changeColor('#4c9aff')"></button>
+        <button class="green" onclick="changeColor('#4caf50')"></button>
+        <button class="yellow" onclick="changeColor('#ffcc00')"></button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Trck your Finance</h2>
+            <p>Join millions of users and spend wisely</p>
+            <a href="#" class="btn">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Why Choose our platform?</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3>Helps in tracking your financial status</h3>
+                    <p>Our platform is really  reliable as it help you improve financially. </p>
+                </div>
+                <div class="feature">
+                    <h3>Fast Development</h3>
+                    <p>Start with a very little amount and watch it become millions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call-to-Action -->
+    <section class="cta">
+        <div class="container">
+            <h2>Start Your Finance tracking today</h2>
+            <a href="#" class="btn">Sign Up Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Fincom. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function changeColor(color) {
+            document.body.style.backgroundColor = color;
+            document.querySelectorAll('.feature').forEach(feature => {
+                feature.style.backgroundColor = color;
+            });
+        }
+    </script>
+
+</body>
+</html>
