@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fincom - Contact Us</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: white;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Container */
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        /* Navbar */
+        header {
+            background-color: #222;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            color: white;
+            margin: 0;
+        }
+
+        /* Contact Section */
+        #contact {
+            background-color: #1a1a1a;
+            padding: 40px 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        #contact h2 {
+            margin-top: 0;
+            font-size: 26px;
+            color: #00bcd4;
+        }
+
+        .participant-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .participant-form input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background-color: #222;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        /* Make input fields readonly (non-editable) */
+        .participant-form input[readonly] {
+            background-color: #333;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00bcd4, #008cba);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background: linear-gradient(45deg, #008cba, #00bcd4);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 30px;
+            background-color: #222;
+        }
+
+        footer p {
+            margin: 0;
+            color: #ccc;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #00bcd4;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 6px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #008cba;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Fincom</h1>
+    </header>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>Get in touch with our great founders:</p>
+            <form>
+                <div class="participant-form">
+                    <input type="text" id="name1" value="Ossaiku Prosper" readonly>
+                    <input type="email" id="email1" value="ossaikuprosper@gmail.com" readonly>
+                </div>
+                <div class="participant-form">
+                    <input type="text" id="name2" value="Olatundun Tesleem" readonly>
+                    <input type="email" id="email2" value="muhammedtesleemolatundun@gmail.com" readonly>
+                </div>
+                <div class="participant-form">
+                    <input type="text" id="name3" value="Olaofe Opeyemi" readonly>
+                    <input type="email" id="email3" value="emmanuelolaofe5@gmail.com" readonly>
+                </div>
+                <div class="participant-form">
+                    <input type="text" id="name4" value="Luka Bright" readonly>
+                    <input type="email" id="email4" value="emokene.bright@gmail.com" readonly>
+                </div>
+                <div class="participant-form">
+                    <input type="text" id="name5" value="Oduntan James" readonly>
+                    <input type="email" id="email5" value="jamesoduntan@gmail.com" readonly>
+                </div>
+                <div class="participant-form">
+                    <input type="text" id="name6" value="Shittu Bilal" readonly>
+                    <input type="email" id="email6" value="shittubilal@gmail.com" readonly>
+                </div>
+                <div class="participant-form">
+                    <input type="text" id="name7" value="Oseni Abdulateef" readonly>
+                    <input type="email" id="email7" value="oseniabdulateef@gmail.com" readonly>
+                </div>
+                
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Fincom. All Rights Reserved.</p>
+        <a href="{{ url_for('index.html')}}" class="btn">Back</a>
+    </footer>
+
+</body>
+</html>
