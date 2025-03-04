@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash, session, jsonify, send_file
 app = Flask(__name__, template_folder='.')
+import mysql.connector
 app.secret_key = "your_secret_key"
 
 @app.route('/')
@@ -63,7 +64,7 @@ def add_transaction():
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('dashboard'))
+    return render_template('home.html')
 
 # Route to Handle Deleting Transactions
 @app.route('/delete/<int:id>')
@@ -74,7 +75,7 @@ def delete_transaction(id):
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('dashboard'))
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
