@@ -8,9 +8,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Emmanuel:Ope12yemi@loca
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your_secret_key'  # Required for session management
 
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
+db = SQLAlchemy(app) # creates a link between the app and the database
+bcrypt = Bcrypt(app) # hashes passwords
+login_manager = LoginManager(app) # handles the login and user authentication
 login_manager.login_view = 'login'
 
 # User Model
@@ -37,7 +37,7 @@ with app.app_context():
 # Load user for authentication
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return users.query.get(int(user_id))
 
 if __name__ == '__main__':
     app.run(debug=True)
