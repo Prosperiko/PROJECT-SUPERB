@@ -19,6 +19,25 @@
             margin: auto;
             padding: 20px;
         }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .theme-switcher {
+            margin: 20px 0;
+        }
+        .theme-switcher button {
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+            width: 40px; /* Fixed width for uniformity */
+            height: 40px; /* Fixed height for uniformity */
+            transition: transform 0.2s;
+        }
+        .theme-switcher button:hover {
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -31,29 +50,12 @@
             border-radius: 10px;
             box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background 0.3s;
         }
         .card:hover {
             transform: scale(1.05);
+            background: #333; /* Darker background on hover */
         }
-        .theme-switcher {
-            margin-top: 20px;
-        }
-        .theme-switcher button {
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 5px;
-        }
-        .red { background-color: #ff4c4c; }
-        .blue { background-color: #4c9aff; }
-        .green { background-color: #4caf50; }
-        .yellow { background-color: #ffcc00; }
-        .purple { background-color: #800080; }
-        .pink { background-color: #ff69b4; }
-        .gray { background-color: #808080; }
-        .teal { background-color: #008080; }
         .logout-btn {
             display: inline-block;
             padding: 10px 20px;
@@ -84,35 +86,27 @@
     <div class="container">
         <h1>Accounting Dashboard</h1>
         <div class="theme-switcher">
-            <button class="red" onclick="changeTheme('#ff4c4c')"></button>
-            <button class="blue" onclick="changeTheme('#4c9aff')"></button>
-            <button class="green" onclick="changeTheme('#4caf50')"></button>
-            <button class="yellow" onclick="changeTheme('#ffcc00')"></button>
-            <button class="purple" onclick="changeTheme('#800080')"></button>
-            <button class="pink" onclick="changeTheme('#ff69b4')"></button>
-            <button class="gray" onclick="changeTheme('#808080')"></button>
-            <button class="teal" onclick="changeTheme('#008080')"></button>
+            <button class="red" style="background-color: #ff4c4c;" onclick="changeTheme('#ff4c4c')"></button>
+            <button class="blue" style="background-color: #4c9aff;" onclick="changeTheme('#4c9aff')"></button>
+            <button class="green" style="background-color: #4caf50;" onclick="changeTheme('#4caf50')"></button>
+            <button class="yellow" style="background-color: #ffcc00;" onclick="changeTheme('#ffcc00')"></button>
+            <button class="purple" style="background-color: #800080;" onclick="changeTheme('#800080')"></button>
+            <button class="pink" style="background-color: #ff69b4;" onclick="changeTheme('#ff69b4')"></button>
+            <button class="gray" style="background-color: #808080;" onclick="changeTheme('#808080')"></button>
+            <button class="teal" style="background-color: #008080;" onclick="changeTheme('#008080')"></button>
         </div>
-        <div class="container">
-            <h1>{{ message }}</h1>
-            <h2>What would you like to do today?</h2>
-           
-                <!-- Add more actions as needed -->
-            
-        </div>
+        <h2>{{ message }}</h2>
+        <h3>What would you like to do today?</h3>
         <div class="dashboard">
-            <div class="card" onclick="navigate('add_expense.html')">Add expense</div>
-            <div class="card" onclick="navigate('add_income.html')">Add income</div>
-            <div class="card" onclick="navigate('ledger.html')">View Ledger</div>
-            <div class="card" onclick="navigate('balance_sheet.html')">View Balance Sheet</div>
-            <div class="card" onclick="navigate('cash_book.html')">View Cash Book</div>
+            <div class="card" onclick="navigate('add_expense.html')">Add Expense</div>
+            <div class="card" onclick="navigate('add_income.html')">Add Income</div>
             <div class="card" onclick="navigate('category_report.html')">Category Report</div>
             <div class="card" onclick="navigate('visualize.html')">Visualize Data</div>
-            <div class="card" onclick="navigate('inventory.html')">Manage Inventory</div>
             <div class="card" onclick="navigate('spending_advice.html')">Spending Advice</div>
         </div>
+        
     </div>
-
+    
     <script>
         function changeTheme(color) {
             document.body.style.backgroundColor = color;
@@ -121,9 +115,9 @@
             window.location.href = page;
         }
     </script>
+
+    <footer>
+        <p>&copy; 2025 Fincom. All Rights Reserved.</p>
+    </footer>
 </body>
-<footer>
-    <p>&copy; 2025 Fincom. All Rights Reserved.</p>
-    <a href="{{ url_for('logout') }}" class="btn">Logout</a>
-</footer>
 </html>
