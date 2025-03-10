@@ -5,12 +5,22 @@ from flask_bcrypt import Bcrypt
 import re
 from flask_mail import Mail, Message
 import random
+from itsdangerous import URLSafeTimedSerializer
+
 
 app = Flask(__name__, template_folder='.')
 bcrypt = Bcrypt(app)
 app.secret_key = "your_secret_key"
 
 
+# Configure Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'projectfinodido@gmail.com'  # Your email address
+app.config['MAIL_PASSWORD'] = 'csqv yavo jcwj bghz'  # Your email password
+app.config['MAIL_DEFAULT_SENDER'] = 'FINCOM'  # Default sender
 
 mail = Mail(app)
 def get_db_connection():
@@ -47,7 +57,7 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-        Nationality = request.form['Nationality']
+        nationality = request.form['nationality']
         customer_type = request.form['customer_type']
 
         # Check if all required fields are filled
@@ -59,7 +69,8 @@ def signup():
         if password != confirm_password:
             flash("Passwords do not match!", "error")
             return redirect('/signup')
-
+        
+        bcrypt = Bcrypt()
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
         conn = get_db_connection()
@@ -74,7 +85,12 @@ def signup():
                     return redirect('/signup')
 
                 # Generate a verification PIN
-               
+                pin = random.randint(100000, 999999)
+
+                # Send the verification email
+                msg = Message("Email Verification", recipients=[email])
+                msg.body = f"Your verification PIN is: {pin}"
+                mail.send(msg)
 
                 # Store user data temporarily (you may want to store it in a session or database)
                 session['pending_user'] = {
@@ -82,9 +98,9 @@ def signup():
                     'fullname': fullname,
                     'email': email,
                     'password': hashed_password,
-                    'Nationality': Nationality,
+                    'nationality': nationality,
                     'customer_type': customer_type,
-                    
+                    'pin': pin
                 }
 
                 flash("A verification PIN has been sent to your email. Please check your inbox.", "success")
@@ -134,7 +150,85 @@ def verify_pin():
 
     return render_template('verify_pin.html')
 
-    
+from itsdangerous import URLSafeTimedSerializer
+
+# Flask-Mail Configuration (Already in your code)
+app.config['MAIL_DEFAULT_SENDER'] = 'projectfinodido@gmail.com'
+
+# Serializer for token generation
+serializer = URLSafeTimedSerializer(app.secret_key)
+
+
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+
+        conn = get_db_connection()
+        if conn:
+            try:
+                cursor = conn.cursor(dictionary=True)
+                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+                user = cursor.fetchone()
+                cursor.close()
+            except Exception as e:
+                flash("An error occurred while accessing the database.", "error")
+                return render_template('forgot_password.html')
+            finally:
+                conn.close()
+
+            if user:
+                # Generate a secure token
+                token = serializer.dumps(email, salt='password-reset')
+
+                # Create reset link
+                reset_url = f"http://127.0.0.1:5000/reset_password/{token}"
+
+                # Send reset link via email
+                msg = Message("Password Reset Request", recipients=[email])
+                msg.body = f"Click the link below to reset your password:\n\n{reset_url}\n\nThis link expires in 10 minutes."
+                
+                try:
+                    mail.send(msg)
+                    flash("A password reset link has been sent to your email.", "success")
+                except Exception as e:
+                    flash("Failed to send email. Please try again later.", "error")
+            else:
+                flash("No account found with that email!", "error")
+
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        # Verify the token
+        email = serializer.loads(token, salt='password-reset', max_age=600)  # 10 minutes expiration
+    except Exception as e:
+        flash("The password reset link is invalid or has expired.", "error")
+        return render_template('forgot_password.html')
+
+    if request.method == 'POST':
+        new_password = request.form['new_password']
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')  # Hash the new password
+        conn = get_db_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                # Update the user's password in the database
+                cursor.execute("UPDATE users SET password = %s WHERE email = %s", (hashed_password, email))
+                conn.commit()
+                cursor.close()
+                flash("Your password has been updated successfully.", "success")
+                return render_template('login.html')  # Redirect to login page after successful reset
+            except Exception as e:
+                flash("An error occurred while updating the password.", "error")
+            finally:
+                conn.close()
+
+    return render_template('reset_password.html', token=token)
+
+
 
 
 

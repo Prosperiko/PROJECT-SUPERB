@@ -137,7 +137,7 @@
             </div>
             <button type="submit" class="login-btn">Login</button>
         </form>
-        <p class="login-link"><a href="#">Forgot Password?</a></p>
+        <p>Forgot password<a href="{{ url_for('forgot_password') }}" class="btn">forgot_password</a></p>
         <p>don't have  an account? <a href="{{ url_for('signup') }}" class="btn">signup</a></p>
     </div>
 
