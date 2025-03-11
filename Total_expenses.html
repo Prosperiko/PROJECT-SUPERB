@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Total Expenses</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 20px;
+      padding: 20px;
+      background-color: #222;
+      border-radius: 8px;
+      text-align: center;
+    }
+    button {
+      background-color: brown;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #a52a2a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Total Expenses</h2>
+    <p>The total expense amount is: <strong>{{ total }}</strong> Naira</p>
+    <button onclick="window.location.href='expenses'">Add More Expenses</button>
+  </div>
+</body>
+</html>
