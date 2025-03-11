@@ -37,6 +37,9 @@ with app.app_context():
 # Load user for authentication
 @login_manager.user_loader
 def load_user(user_id):
+    # so what i did was use sqlalchemy to create the database and it connected to it and if its needed to 
+     # use a different database just change the configurations !!
+
     return users.query.get(int(user_id))
 
 if __name__ == '__main__':

@@ -11,14 +11,6 @@ bcrypt = Bcrypt(app)
 app.secret_key = "your_secret_key"
 
 
-# Configure Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'projectfinodido@gmail.com'  # Your email address
-app.config['MAIL_PASSWORD'] = 'csqv yavo jcwj bghz'  # Your email password
-app.config['MAIL_DEFAULT_SENDER'] = 'projectfinodido@gmail.com'  # Default sender
 
 mail = Mail(app)
 def get_db_connection():
@@ -55,7 +47,7 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-        nationality = request.form['Nationality']
+        Nationality = request.form['Nationality']
         customer_type = request.form['customer_type']
 
         # Check if all required fields are filled
@@ -82,12 +74,7 @@ def signup():
                     return redirect('/signup')
 
                 # Generate a verification PIN
-                pin = random.randint(100000, 999999)
-
-                # Send the verification email
-                msg = Message("Email Verification", recipients=[email])
-                msg.body = f"Your verification PIN is: {pin}"
-                mail.send(msg)
+               
 
                 # Store user data temporarily (you may want to store it in a session or database)
                 session['pending_user'] = {
@@ -95,9 +82,9 @@ def signup():
                     'fullname': fullname,
                     'email': email,
                     'password': hashed_password,
-                    'nationality': nationality,
+                    'Nationality': Nationality,
                     'customer_type': customer_type,
-                    'pin': pin
+                    
                 }
 
                 flash("A verification PIN has been sent to your email. Please check your inbox.", "success")
@@ -173,8 +160,8 @@ def login():
 
                         flash("Login successful!", "success")
 
-                        # Trim and check customer type
-                        if user['customer_type'].strip().lower() == 'individual':
+                        
+                        if user['customer_type'].lower() == 'individual':
                             return redirect('/home1')
                         else:  
                             return redirect('/home')

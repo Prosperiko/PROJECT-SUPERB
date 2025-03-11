@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt
 import re
 from flask_mail import Mail, Message
 import random
-
+from itsdangerous import URLSafeTimedSerializer
 app = Flask(__name__, template_folder='.')
 bcrypt = Bcrypt(app)
 app.secret_key = "your_secret_key"
@@ -14,9 +14,9 @@ app.secret_key = "your_secret_key"
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'projectfinodido@gmail.com'  # Your email address
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'muhammedtesleemolatundun.com'  # Your email address
 app.config['MAIL_PASSWORD'] = 'csqv yavo jcwj bghz'  # Your email password
 app.config['MAIL_DEFAULT_SENDER'] = 'projectfinodido@gmail.com'  # Default sender
 
@@ -55,7 +55,7 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-        nationality = request.form['Nationality']
+        nationality = request.form['nationality']
         customer_type = request.form['customer_type']
 
         # Check if all required fields are filled
@@ -147,7 +147,76 @@ def verify_pin():
 
     return render_template('verify_pin.html')
 
-    
+from itsdangerous import URLSafeTimedSerializer
+
+# Flask-Mail Configuration (Already in your code)
+app.config['MAIL_DEFAULT_SENDER'] = 'projectfinodido@gmail.com'
+
+# Serializer for token generation
+serializer = URLSafeTimedSerializer(app.secret_key)
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+
+        conn = get_db_connection()
+        if conn:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+            user = cursor.fetchone()
+            cursor.close()
+            conn.close()
+
+            if user:
+                # Generate a secure token
+                token = serializer.dumps(email, salt='password-reset')
+
+                # Create reset link
+                reset_url = f"http://127.0.0.1:5000/reset_password/{token}"
+
+                # Send reset link via email
+                msg = Message("Password Reset Request", recipients=[email])
+                msg.body = f"Click the link below to reset your password:\n\n{reset_url}\n\nThis link expires in 10 minutes."
+                mail.send(msg)
+
+                flash("A password reset link has been sent to your email.", "success")
+            else:
+                flash("No account found with that email!", "error")
+
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = serializer.loads(token, salt='password-reset', max_age=600)  # Valid for 10 minutes
+    except:
+        flash("The password reset link is invalid or has expired!", "error")
+        return redirect('/forgot_password')
+
+    if request.method == 'POST':
+        new_password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if new_password != confirm_password:
+            flash("Passwords do not match!", "error")
+            return redirect(f'/reset_password/{token}')
+
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+
+        conn = get_db_connection()
+        if conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET password = %s WHERE email = %s", (hashed_password, email))
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+            flash("Password reset successful! You can now log in.", "success")
+            return redirect('/login')
+
+    return render_template('reset_password.html', token=token)
+
 
 
 
@@ -173,8 +242,8 @@ def login():
 
                         flash("Login successful!", "success")
 
-                        # Trim and check customer type
-                        if user['customer_type'].strip().lower() == 'individual':
+                        
+                        if user['customer_type'].lower() == 'individual':
                             return redirect('/home1')
                         else:  
                             return redirect('/home')
