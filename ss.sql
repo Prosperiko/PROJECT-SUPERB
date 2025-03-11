@@ -7,4 +7,4 @@ CREATE TABLE transactions (
     type ENUM('income', 'expense') NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     date DATE NOT NULL
-);
+)

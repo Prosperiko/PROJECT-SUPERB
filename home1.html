@@ -46,7 +46,7 @@
         }
         .card {
             padding: 20px;
-            background: #222;
+            background: #222222;
             border-radius: 10px;
             box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
             cursor: pointer;
@@ -68,13 +68,13 @@
             transition: background-color 0.3s, transform 0.2s;
         }
         .logout-btn:hover {
-            background-color: #008cba; /* Blue background on hover */
+            background-color: #a4ba00; /* Blue background on hover */
             transform: translateY(-2px); /* Slight lift effect on hover */
         }
         footer {
             margin-top: 20px;
             padding: 10px 0;
-            background-color: #222;
+            background-color: #22222200;
             color: white;
             position: relative;
             bottom: 0;
@@ -119,6 +119,7 @@
 
     <footer>
         <p>&copy; 2025 Fincom. All Rights Reserved.</p>
+        <a href="{{ url_for('logout') }}" class="btn">Logout</a>
     </footer>
 </body>
 </html>

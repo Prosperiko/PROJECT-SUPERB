@@ -285,22 +285,23 @@ def another_action():
 @app.route('/yet_another_action')
 def yet_another_action():
     return "You chose Action 3!"
+def generate_welcome_message(username, customer_type):
+    """Generate a welcome message based on the username and customer type."""
+    if customer_type == 'individual':
+        return f"Welcome, {username}! We're glad to have you here."
+    elif customer_type == 'family':
+        return f"Welcome, {username}! Your family is important to us."
+    elif customer_type == 'company':
+        return f"Welcome, {username}! Thank you for choosing us for your business needs."
+    else:
+        return "Welcome!"
+
 @app.route('/home')
 def home():
     if 'username' in session:
         username = session['username']
         customer_type = session['customer_type']
-
-        # Customize the welcome message based on the customer_type
-        if customer_type == 'individual':
-            welcome_message = f"Welcome, {username}! We're glad to have you here."
-        elif customer_type == 'family':
-            welcome_message = f"Welcome, {username}! Your family is important to us."
-        elif customer_type == 'company':
-            welcome_message = f"Welcome, {username}! Thank you for choosing us for your business needs."
-        else:
-            welcome_message = "Welcome!"
-
+        welcome_message = generate_welcome_message(username, customer_type)
         return render_template('home.html', message=welcome_message)
     else:
         flash("You need to log in first!", "error")
@@ -311,18 +312,8 @@ def home1():
     if 'username' in session:
         username = session['username']
         customer_type = session['customer_type']
-
-        # Customize the welcome message based on the customer_type
-        if customer_type == 'individual':
-            welcome_message = f"Welcome, {username}! We're glad to have you here."
-        elif customer_type == 'family':
-            welcome_message = f"Welcome, {username}! Your family is important to us."
-        elif customer_type == 'company':
-            welcome_message = f"Welcome, {username}! Thank you for choosing us for your business needs."
-        else:
-            welcome_message = "Welcome!"
-
-        return render_template('home.html', message=welcome_message)
+        welcome_message = generate_welcome_message(username, customer_type)
+        return render_template('home1.html', message=welcome_message)  # Render a different template for home1
     else:
         flash("You need to log in first!", "error")
         return redirect('/login')
