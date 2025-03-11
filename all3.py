@@ -6,8 +6,6 @@ import re
 from flask_mail import Mail, Message
 import random
 from itsdangerous import URLSafeTimedSerializer
-
-
 app = Flask(__name__, template_folder='.')
 bcrypt = Bcrypt(app)
 app.secret_key = "your_secret_key"
@@ -16,11 +14,11 @@ app.secret_key = "your_secret_key"
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'projectfinodido@gmail.com'  # Your email address
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'muhammedtesleemolatundun.com'  # Your email address
 app.config['MAIL_PASSWORD'] = 'csqv yavo jcwj bghz'  # Your email password
-app.config['MAIL_DEFAULT_SENDER'] = 'FINCOM'  # Default sender
+app.config['MAIL_DEFAULT_SENDER'] = 'projectfinodido@gmail.com'  # Default sender
 
 mail = Mail(app)
 def get_db_connection():
@@ -69,8 +67,7 @@ def signup():
         if password != confirm_password:
             flash("Passwords do not match!", "error")
             return redirect('/signup')
-        
-        bcrypt = Bcrypt()
+
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
         conn = get_db_connection()
@@ -158,8 +155,6 @@ app.config['MAIL_DEFAULT_SENDER'] = 'projectfinodido@gmail.com'
 # Serializer for token generation
 serializer = URLSafeTimedSerializer(app.secret_key)
 
-
-
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
@@ -167,16 +162,11 @@ def forgot_password():
 
         conn = get_db_connection()
         if conn:
-            try:
-                cursor = conn.cursor(dictionary=True)
-                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-                user = cursor.fetchone()
-                cursor.close()
-            except Exception as e:
-                flash("An error occurred while accessing the database.", "error")
-                return render_template('forgot_password.html')
-            finally:
-                conn.close()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+            user = cursor.fetchone()
+            cursor.close()
+            conn.close()
 
             if user:
                 # Generate a secure token
@@ -188,12 +178,9 @@ def forgot_password():
                 # Send reset link via email
                 msg = Message("Password Reset Request", recipients=[email])
                 msg.body = f"Click the link below to reset your password:\n\n{reset_url}\n\nThis link expires in 10 minutes."
-                
-                try:
-                    mail.send(msg)
-                    flash("A password reset link has been sent to your email.", "success")
-                except Exception as e:
-                    flash("Failed to send email. Please try again later.", "error")
+                mail.send(msg)
+
+                flash("A password reset link has been sent to your email.", "success")
             else:
                 flash("No account found with that email!", "error")
 
@@ -202,32 +189,33 @@ def forgot_password():
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     try:
-        # Verify the token
-        email = serializer.loads(token, salt='password-reset', max_age=600)  # 10 minutes expiration
-    except Exception as e:
-        flash("The password reset link is invalid or has expired.", "error")
-        return render_template('forgot_password.html')
+        email = serializer.loads(token, salt='password-reset', max_age=600)  # Valid for 10 minutes
+    except:
+        flash("The password reset link is invalid or has expired!", "error")
+        return redirect('/forgot_password')
 
     if request.method == 'POST':
-        new_password = request.form['new_password']
-        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')  # Hash the new password
+        new_password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if new_password != confirm_password:
+            flash("Passwords do not match!", "error")
+            return redirect(f'/reset_password/{token}')
+
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+
         conn = get_db_connection()
         if conn:
-            try:
-                cursor = conn.cursor()
-                # Update the user's password in the database
-                cursor.execute("UPDATE users SET password = %s WHERE email = %s", (hashed_password, email))
-                conn.commit()
-                cursor.close()
-                flash("Your password has been updated successfully.", "success")
-                return render_template('login.html')  # Redirect to login page after successful reset
-            except Exception as e:
-                flash("An error occurred while updating the password.", "error")
-            finally:
-                conn.close()
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET password = %s WHERE email = %s", (hashed_password, email))
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+            flash("Password reset successful! You can now log in.", "success")
+            return redirect('/login')
 
     return render_template('reset_password.html', token=token)
-
 
 
 
@@ -285,23 +273,22 @@ def another_action():
 @app.route('/yet_another_action')
 def yet_another_action():
     return "You chose Action 3!"
-def generate_welcome_message(username, customer_type):
-    """Generate a welcome message based on the username and customer type."""
-    if customer_type == 'individual':
-        return f"Welcome, {username}! We're glad to have you here."
-    elif customer_type == 'family':
-        return f"Welcome, {username}! Your family is important to us."
-    elif customer_type == 'company':
-        return f"Welcome, {username}! Thank you for choosing us for your business needs."
-    else:
-        return "Welcome!"
-
 @app.route('/home')
 def home():
     if 'username' in session:
         username = session['username']
         customer_type = session['customer_type']
-        welcome_message = generate_welcome_message(username, customer_type)
+
+        # Customize the welcome message based on the customer_type
+        if customer_type == 'individual':
+            welcome_message = f"Welcome, {username}! We're glad to have you here."
+        elif customer_type == 'family':
+            welcome_message = f"Welcome, {username}! Your family is important to us."
+        elif customer_type == 'company':
+            welcome_message = f"Welcome, {username}! Thank you for choosing us for your business needs."
+        else:
+            welcome_message = "Welcome!"
+
         return render_template('home.html', message=welcome_message)
     else:
         flash("You need to log in first!", "error")
@@ -312,53 +299,21 @@ def home1():
     if 'username' in session:
         username = session['username']
         customer_type = session['customer_type']
-        welcome_message = generate_welcome_message(username, customer_type)
-        return render_template('home1.html', message=welcome_message)  # Render a different template for home1
+
+        # Customize the welcome message based on the customer_type
+        if customer_type == 'individual':
+            welcome_message = f"Welcome, {username}! We're glad to have you here."
+        elif customer_type == 'family':
+            welcome_message = f"Welcome, {username}! Your family is important to us."
+        elif customer_type == 'company':
+            welcome_message = f"Welcome, {username}! Thank you for choosing us for your business needs."
+        else:
+            welcome_message = "Welcome!"
+
+        return render_template('home.html', message=welcome_message)
     else:
         flash("You need to log in first!", "error")
         return redirect('/login')
-    
-
-
-@app.route('/balances')
-def balances():
-    if 'user_id' not in session:
-        flash("Please log in to view your balance.", "error")
-        return render_template('login.html')
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    user_id = session.get('user_id')
-
-    try:
-        cursor.execute("""
-            SELECT 
-                COALESCE(SUM(CASE WHEN t.transaction_type = 'cash' THEN t.amount ELSE 0 END), 0) AS cash_balance,
-                COALESCE(SUM(CASE WHEN t.transaction_type = 'card' THEN t.amount ELSE 0 END), 0) AS card_balance
-            FROM 
-                transactions t 
-            WHERE 
-                t.user_id = %s;
-        """, (user_id,))
-        
-        balance = cursor.fetchone()
-
-        # Determine home page dynamically
-        customer_type = session.get("customer_type", "individual").lower()
-        user_home = "home1" if customer_type == "individual" else "home"
-
-        return render_template('balances.html', balance=balance, user_home=user_home)
-
-    except Error as e:
-        flash(f"An error occurred: {e}", "error")
-        return redirect('/error')  
-    
-    finally:
-        cursor.close()
-        conn.close()
-
-        conn.close()
 @app.route('/logout')
 def logout():
     session.clear()
